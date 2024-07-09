@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG" monitorInterval="5">
+    <Properties>
+        <Property name="LOG_PATH">./logs</Property>
+        <Property name="APP_ROLLING_FILE_NAME">app</Property>
+        <Property name="AOP_ROLLING_FILE_NAME">aop</Property>
+                <Property name="CONSOLE_LOG_PATTERN">%highlight{%d{HH:mm:ss.SSS} [%t] %-5level: %red{%logger{36}} - %style{%msg%n%throwable}{bright,blue}}</Property>
+        <Property name="FILE_LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %5level [%thread] %logger{36} - %msg%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${CONSOLE_LOG_PATTERN}" disableAnsi="false"/>
+            <withJansi>true</withJansi>
+        </Console>
+        <RollingFile name="RollingFile" fileName="${LOG_PATH}/${APP_ROLLING_FILE_NAME}.log"
+                     filePattern="${LOG_PATH}/${APP_ROLLING_FILE_NAME}_%d{yyyy-MM-dd}_%i.log.zip">
+            <PatternLayout pattern="${FILE_LOG_PATTERN}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10">
+                <Delete basePath="${LOG_PATH}" maxDepth="10">
+                    <IfFileName glob="*.zip"/>
+                    <IfLastModified age="30d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <RollingFile name="AopRollingFile" fileName="${LOG_PATH}/${AOP_ROLLING_FILE_NAME}.log"
+                     filePattern="${LOG_PATH}/${AOP_ROLLING_FILE_NAME}_%d{yyyy-MM-dd}_%i.log.zip">
+            <PatternLayout pattern="${FILE_LOG_PATTERN}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100MB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.epam.example.web.logging" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="AopRollingFile"/>
+        </Logger>
+        <Root level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

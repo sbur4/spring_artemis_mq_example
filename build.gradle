@@ -1,0 +1,78 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+description = "ActiveMQ example"
+group 'com.epam'
+version '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    compileJava.options.encoding = 'UTF-8'
+}
+
+application {
+    mainClass = 'com.epam.example.web.DemoApplication'
+}
+
+wrapper {
+    gradleVersion = '8.0'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    configureEach {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // spring
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.7.18'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.18'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.18'
+    implementation group: 'io.spring.gradle', name: 'dependency-management-plugin', version: '1.1.4'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.7.18', ext: 'pom'
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+    // apache
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.5.0-M1'
+    // jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.15.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.15.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate5', version: '2.15.2'
+    // log
+    implementation 'org.springframework.boot:spring-boot-starter-logging:2.7.18'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '2.7.18'
+    // messaging broker
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-artemis', version: '2.7.18'
+//    implementation group: 'org.apache.activemq', name: 'activemq-broker', version: '5.18.4'
+}
+
+sourceSets {
+    main {
+        runtimeClasspath = files(output.resourcesDir) + runtimeClasspath
+    }
+    test {
+        runtimeClasspath = files(output.resourcesDir) + runtimeClasspath
+    }
+}
